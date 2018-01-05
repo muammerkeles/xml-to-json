@@ -1,0 +1,58 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title= "Read Xml To JSON";
+}
+
+   
+    
+    <script>
+        document.onreadystatechange = () => {
+            if (document.readyState === 'complete') {
+                // document ready
+                callajax();
+            }
+        };
+        function callajax() {
+            var ajax = new XMLHttpRequest();
+             
+            ajax.open("GET", "@Url.Action("ReadXml_giveJson")", true);             
+            ajax.send();
+            ajax.onreadystatechange = function () {
+                 
+                if (ajax.readyState == 4 && ajax.status == 200) {
+                    var _temp= JSON.parse(ajax.responseText).result;
+                    var obj = JSON.parse(_temp).CATALOG;
+                    console.log(obj)
+                    var mydata= "<ul><li><b>Title  - Price </b></li>";
+                    Array.prototype.forEach.call(obj.CD, function (entry) {
+                        //console.log("<li>" + entry.TITLE + " : " + entry.PRICE + "</li>")
+                        mydata +="<li>"+ entry.TITLE + " : " + entry.PRICE + "</li>"
+                    });
+                    document.getElementById("result1").innerHTML = mydata +  "</ul>";
+
+                    var data = ajax.responseText;
+                    document.getElementById("result2").innerHTML ="<h3>Also it can display as pure result : </h3>" +  data;
+                     
+                }
+            }
+
+        }
+    </script>
+ 
+<h1>JSON result data of Ajax XML GET</h1>
+<p>Readed XML Url : <a href="https://www.w3schools.com/xml/cd_catalog.xml" target="_blank">https://www.w3schools.com/xml/cd_catalog.xml</a> </p>
+<div class="alert alert-info">
+    Please check it out code side of window to see all codes.
+</div>
+<div id="result1" style="border:solid 1px #000;padding:5px">
+
+</div>
+    <div id="result2"> 
+
+    </div>
+ <style>
+     ul,li{
+         list-style-type:none;
+     }
+ </style>
